@@ -1,16 +1,41 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
+DEBUG = os.environ.get("DEBUG")
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-@_9m8x*_l$jjgl(af@ppx@gqks8+wusgd51(#_yu1p_o*qyg@+'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-ALLOWED_HOSTS = []
+if DEBUG:
+    ALLOWED_HOSTS = ['*']
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get("DB_NAME"),
+            'USER': os.environ.get("DB_USER"),
+            'PASSWORD': os.environ.get("DB_PASSWORD"),
+            'HOST': os.environ.get("DB_HOST"),
+            'PORT': 5432,
+        }
+    }
+else:
+    ALLOWED_HOSTS = ['*']
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get("DB_NAME"),
+            'USER': os.environ.get("DB_USER"),
+            'PASSWORD': os.environ.get("DB_PASSWORD"),
+            'HOST': os.environ.get("DB_HOST"),
+            'PORT': 5432,
+        }
+    }
 
 # Application definition
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -47,14 +72,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'jarvis.wsgi.application'
-
-# Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
